@@ -1,0 +1,13 @@
+INPUT:
+videos, endpoints, request time, no_of_caches, capacity
+size of videos (X videos)
+Endpoints (X endpoints):
+    latency_from_data, no_of_caches_for_endpoint:
+        cache id, latency
+requests (X <=videos)
+video, endpoint, no_of_requests
+
+endpoints [[latency [cacheIds, ...]], 30, 3133,] latency fot i'th endpoint
+caches:{chace_id:[[endpoint_id, latency, current_capacity], ...]}
+requests [[video_id, endpoint, no_of_requests]] for i'th video
+weighted_videos[(video, weight)....]
