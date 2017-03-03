@@ -4,9 +4,9 @@ from collections import namedtuple
 #purpose of this code is to read data and put it into convenient data structures
 
 
-Request = namedtuple('Request', 'idNo endpointID nmOrequests')
-Endpoint = namedtuple('Endpoint', 'idNo latency requests')
-Cache = namedtuple('Cache', 'idNo latency endpoint cur_cap')
+Request = namedtuple('Request', 'endpointID nmOrequests')
+Endpoint = namedtuple('Endpoint', 'latency requests')
+Cache = namedtuple('Cache', 'latency endpoint cur_cap')
 #classes aren't needed. cool...
 
 #Gets data
@@ -28,13 +28,13 @@ def read_data(file_name):
 
         for i in xrange(infos[1]):
             endpoint = f.readline().strip().split(" ")
-            endpoints.append(Endpoint(len(endpoints), int(endpoint[0]), set([])))
+            endpoints.append(Endpoint(int(endpoint[0]), set([])))
             for j in range(int(endpoint[1])):
                 cache = f.readline().strip().split(" ")
-                caches[int(cache[0])].append(Cache(int(cache[0]), int(cache[1]), len(endpoints) - 1, capacity))
+                caches[int(cache[0])].append(Cache(int(cache[1]), len(endpoints) - 1, capacity))
         for line in f:
             request = line.strip().split(" ")
-            endpoints[int(request[1])].requests.update(Request(int(request[0]), int(request[1]), int(request[2])))
+            endpoints[int(request[1])].requests.update(Request(int(request[1]), int(request[2])))
     return infos, vid_sizes, endpoints, caches
 
 
