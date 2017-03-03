@@ -1,31 +1,13 @@
 import numpy as np
+from collections import namedtuple
 
 #purpose of this code is to read data and put it into convenient data structures
 
-#I decided to implement classes because list[i][3] can get confusing really quickly
-#but since python can't print classes neatly and overriding print directly is impossible
-#so using classes made debugging more of a clutter
 
-class Request:
-    def __init__(self, idNo, endpointID, nmOrequests):
-        self.idNo = idNo
-        self.endpointID = endpointID
-        self.nmOrequests = nmOrequests
-        
-class Endpoint:
-    def __init__(self, idNo, latency, requests):
-        self.idNo = idNo
-        self.latency = latency
-        self.requests = requests
-
-class Cache:
-    def __init__(self, idNo, latency, endpoint, cur_cap):
-        self.idNo = idNo
-        self.latency = latency
-        self.endpoint = endpoint
-        self.cur_cap = cur_cap
-
-
+Request = namedtuple('Request', 'idNo endpointID nmOrequests')
+Endpoint = namedtuple('Endpoint', 'idNo latency requests')
+Cache = namedtuple('Cache', 'idNo latency endpoint cur_cap')
+#classes aren't needed. cool...
 
 #Gets data
 def read_data(file_name):
@@ -42,15 +24,17 @@ def read_data(file_name):
         caches = [[] for i in xrange(infos[3])]
 
 
+
+
         for i in xrange(infos[1]):
             endpoint = f.readline().strip().split(" ")
-            endpoints.append(Endpoint(len(endpoints), int(endpoint[0]), []))
+            endpoints.append(Endpoint(len(endpoints), int(endpoint[0]), set([])))
             for j in range(int(endpoint[1])):
                 cache = f.readline().strip().split(" ")
                 caches[int(cache[0])].append(Cache(int(cache[0]), int(cache[1]), len(endpoints) - 1, capacity))
         for line in f:
             request = line.strip().split(" ")
-            endpoints[int(request[1])].requests.append(Request(int(request[0]), int(request[1]), int(request[2])))
+            endpoints[int(request[1])].requests.update(Request(int(request[0]), int(request[1]), int(request[2])))
     return infos, vid_sizes, endpoints, caches
 
 
@@ -86,13 +70,15 @@ def process_data(data):
             #iterates through each endpoint connected to the cache
             for c in caches[cache]:
                 #checks if video is requested by the endpoint
-                for r in endpoints[c.endpoint].requests:
-                    if vid == r.idNo:
+                if vid in endpoints[c.endpoint].requests:
+                #for r in endpoints[c.endpoint].requests:
+                    #if vid == r.idNo: #GET THIS TO BE EFFICIENT
                         # might not be needed
                         # checks if the video can be added to the cache
                         if vid_sizes[vid] <= capacity:
-                            table[vid][cache] += (endpoints[c.endpoint].latency - c.latency) * r.nmOrequests
-                        break
+                            table[vid][cache] += (endpoints[c.endpoint].latency - c.latency) #* endpoints[c.endpoint].requests[vid].nmOrequests
+                        #break
+                        #set DON'T support convenient way to retrieve videos
     return table
 
 
