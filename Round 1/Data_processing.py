@@ -6,8 +6,8 @@ from collections import namedtuple
 
 Request = namedtuple('Request', 'endpointID nmOrequests')
 Endpoint = namedtuple('Endpoint', 'latency requests')
-Cache = namedtuple('Cache', 'latency endpoint cur_cap')
-#classes aren't needed. cool...
+Cache = namedtuple('Cache', 'endpoints videos')
+
 
 #Gets data
 def read_data(file_name):
@@ -20,35 +20,40 @@ def read_data(file_name):
         vid_sizes = f.readline().strip().split(" ")
         for i in range(len(vid_sizes)):
             vid_sizes[i] = int(vid_sizes[i])
-        endpoints = []
-        caches = [[] for i in xrange(infos[3])]
+        endpoints = {}
+        caches = {}
 
-
+        #endpoints{id} = latency, dict of requests
+        #caches{id} = endpoints{eId} = cLatency, videos{vidId} = eId
 
 
         for i in xrange(infos[1]):
             endpoint = f.readline().strip().split(" ")
-            endpoints.append(Endpoint(int(endpoint[0]), set([])))
-            for j in range(int(endpoint[1])):
+            eLatency = int(endpoint[0])
+            nmOcaches = int(endpoint[1])
+            curEndpoint = len(endpoints)
+            endpoints[curEndpoint] = (Endpoint(eLatency, {} ))
+            for j in range(nmOcaches):
                 cache = f.readline().strip().split(" ")
-                caches[int(cache[0])].append(Cache(int(cache[1]), len(endpoints) - 1, capacity))
+                cacheId = int(cache[0])
+                cLatency = int(cache[1])
+                caches[cacheId] = caches.get(cacheId, Cache({}, {}))
+                caches[cacheId].endpoints[curEndpoint] = cLatency
+
         for line in f:
             request = line.strip().split(" ")
-            endpoints[int(request[1])].requests.update(Request(int(request[1]), int(request[2])))
+            video = int(request[0])
+            endpoint = int(request[1])
+            nmOrequests = int(request[2])
+
+            endpoints[endpoint].requests[video] = nmOrequests
+
+            # for c in caches:
+            #     if c in endpoints[endpoint]:
+            #         caches[c].videos[video] =
     return infos, vid_sizes, endpoints, caches
 
 
-# temp = read_data('example.in')
-# for i in range(len(temp[2])):
-#     print temp[2][i].idNo, temp[2][i].latency
-#     for j in temp[2][i].requests:
-#         print j.idNo, j.endpointID, j.nmOrequests, '|',
-#     print
-#
-# for i in temp[3]:
-#     for j in i:
-#         print j.idNo, j.latency, j.endpoint, '|',
-#     print
 
 #Constructs an NmOfVideos X NmOfCaches array where an i,j position
 #represnts time which would be saved if i'th video would be put in j'th cache
@@ -68,17 +73,20 @@ def process_data(data):
     for cache in xrange(nmOcaches):
         for vid in xrange(nmOvideos):
             #iterates through each endpoint connected to the cache
-            for c in caches[cache]:
+            for c in caches[cache].endpoints:
                 #checks if video is requested by the endpoint
-                if vid in endpoints[c.endpoint].requests:
+                if vid in endpoints[c].requests:
                 #for r in endpoints[c.endpoint].requests:
                     #if vid == r.idNo: #GET THIS TO BE EFFICIENT
                         # might not be needed
                         # checks if the video can be added to the cache
                         if vid_sizes[vid] <= capacity:
-                            table[vid][cache] += (endpoints[c.endpoint].latency - c.latency) #* endpoints[c.endpoint].requests[vid].nmOrequests
+                            table[vid][cache] += (endpoints[c].latency - caches[cache].endpoints[c]) * endpoints[c].requests[vid]
                         #break
                         #set DON'T support convenient way to retrieve videos
     return table
 
+# data = read_data('kittens.in')
+# print data[3]
+# print process_data(data)
 
