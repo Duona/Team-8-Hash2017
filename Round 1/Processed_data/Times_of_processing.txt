@@ -1,0 +1,36 @@
+Attempt 1:
+me_at_the_zoo.in
+Reading: 0.000999927520752 seconds
+Processing: 0.00200009346008 seconds
+Saving: 0.0130000114441 seconds
+videos_worth_spreading.in
+Reading: 0.385999917984 seconds
+Processing: 2.03499984741 seconds
+Saving: 0.108000040054 seconds
+trending_today.in
+Reading: 0.460999965668 seconds
+Processing: 43.5180001259 seconds
+Saving: 0.129999876022 seconds
+kittens.in
+Reading: 2.28200006485 seconds
+Processing: 1142.41799998 seconds
+Saving: 1.02099990845 seconds
+
+Attempt 2:
+me_at_the_zoo.in
+Reading: 0.0299999713898 seconds
+Processing: 0.0 seconds
+Saving: 0.0199999809265 seconds
+videos_worth_spreading.in
+Reading: 0.410000085831 seconds
+Processing: 1.82999992371 seconds
+Saving: 0.0499999523163 seconds
+trending_today.in
+Reading: 0.47000002861 seconds
+Processing: 40.9710001945 seconds
+Saving: 0.0599999427795 seconds
+kittens.in
+Reading: 2.22000002861 seconds
+Processing: 1052.41199994 seconds
+Saving: 0.450000047684 seconds
+

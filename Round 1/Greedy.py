@@ -1,8 +1,6 @@
 import numpy as np
-import Data_processing as dp
 
-def greedy(file_name):
-    data = dp.read_data(file_name)
+def greedy(data, table):
 
     infos, vid_sizes = data[0:2]
 
@@ -12,7 +10,7 @@ def greedy(file_name):
     nmOcaches = infos[3]
     capacity = infos[4]
 
-    weight_table = dp.process_data(data)
+    weight_table = table
     #returns an array of video indexes there the most valuable video for the cache
     #(the one which saves most time) is on top of the array
     id_table = np.argsort(weight_table, axis=0)[::-1]
