@@ -11,3 +11,10 @@ endpoints [[latency [cacheIds, ...]], 30, 3133,] latency fot i'th endpoint
 caches:{chace_id:[[endpoint_id, latency, current_capacity], ...]}
 requests [[video_id, endpoint, no_of_requests]] for i'th video
 weighted_videos[(video, weight)....]
+
+TWO DIFFERENT DATA PROCESSINGS DON'T GIVE SAME RESULTS
+NEW SUBMISSION GIVES LESS SCORE
+(found a cause. MORE THAN ONE REQUEST OF A SINGLE VID FFS. just lucky in example)
+UPDATE more than one request of a single video from a single endpoint?
+
+WHY ON THURSDAY KITTENS WERE COMPUTED SO FAST?
